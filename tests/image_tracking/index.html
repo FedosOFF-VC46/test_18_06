@@ -11,13 +11,25 @@
 
           marker.addEventListener('targetFound', function () {
             this.vid.play();
+            this.el.querySelector('a-video').setAttribute('animation__fadein', {
+              property: 'material.opacity',
+              to: 1,
+              dur: 1000,
+              easing: 'easeInOutQuad'
+            });
           }.bind(this));
 
           marker.addEventListener('targetLost', function () {
             this.vid.pause();
+            this.el.querySelector('a-video').setAttribute('animation__fadeout', {
+              property: 'material.opacity',
+              to: 0,
+              dur: 1000,
+              easing: 'easeInOutQuad'
+            });
           }.bind(this));
           
-          // Фикс для IOS
+          // Фикс для iOS
           window.addEventListener('touchstart', function() {
             this.vid.play();
           }.bind(this));
@@ -55,7 +67,8 @@
                  rotation="0 0 0" 
                  class="clickable"
                  gesture-handler 
-                 sound="src: #audio"></a-video>
+                 sound="src: #audio"
+                 material="opacity: 0"></a-video>
       </a-entity>
     </a-scene>
   </body>
