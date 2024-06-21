@@ -3,6 +3,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script>
+        document.addEventListener('click', () => {
+            const video = document.querySelector('#video1');
+            const audio = document.querySelector('#audio');
+            if (video) video.play();
+            if (audio) audio.play();
+        });
+    </script>
   </head>
   <body>
     <a-scene mindar-image="imageTargetSrc: image1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -24,14 +32,14 @@
         <a-entity mindar-image-target="targetIndex: 0">
             <a-plane src="#image1" 
                 position="0 0 0" 
-                height="0.552" 
+                height="0.66" 
                 width="1" 
                 rotation="0 0 0">
             </a-plane>
         <a-video src="#video1" 
-            position="0 0 0.1" 
+            position="0 0 0.001" 
             width="1" 
-            height="0.552" 
+            height="0.66" 
             rotation="0 0 0" 
             class="clickable"
             gesture-handler 
