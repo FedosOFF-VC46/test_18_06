@@ -15,7 +15,13 @@
           this.vid = document.querySelector(this.data.videoId);
           this.audio = document.querySelector(this.data.audioId);
 
+          if (!this.vid || !this.audio) {
+            console.error('Видео или аудио не найдены!!!');
+            return;
+          }
+
           marker.addEventListener('targetFound', function () {
+            console.log('Target found');
             this.vid.play();
             this.audio.play();
             this.el.querySelector('a-video').setAttribute('animation__fadein', {
@@ -27,6 +33,7 @@
           }.bind(this));
 
           marker.addEventListener('targetLost', function () {
+            console.log('Target lost');
             this.vid.pause();
             this.audio.pause();
             this.el.querySelector('a-video').setAttribute('animation__fadeout', {
@@ -38,10 +45,12 @@
           }.bind(this));
 
           this.el.querySelector('a-video').addEventListener('animationcomplete__fadein', function () {
+            console.log('Fade-in animation complete');
             this.el.querySelector('a-video').removeAttribute('animation__fadein');
           }.bind(this));
 
           this.el.querySelector('a-video').addEventListener('animationcomplete__fadeout', function () {
+            console.log('Fade-out animation complete');
             this.el.querySelector('a-video').removeAttribute('animation__fadeout');
           }.bind(this));
           
@@ -100,7 +109,7 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!-----------------------------------ПЕРВАЯ СУЩНОСТЬ--------------------------------------------------->
-      <a-entity mindar-image-target="targetIndex: 0" videohandler>
+      <a-entity mindar-image-target="targetIndex: 0" videohandler="videoId: #video1; audioId: #audio1">
         <a-plane src="#image1" 
                  position="0 0 0" 
                  height="0.66" 
@@ -119,7 +128,7 @@
                  material="opacity: 0.85"></a-video>
       </a-entity>
       <!-----------------------------------ВТОРАЯ СУЩНОСТЬ--------------------------------------------------->
-      <a-entity mindar-image-target="targetIndex: 1" videohandler>
+      <a-entity mindar-image-target="targetIndex: 1" videohandler="videoId: #video2; audioId: #audio2">
         <a-plane src="#image2" 
                  position="0 0 0" 
                  height="0.66" 
@@ -138,7 +147,7 @@
                  material="opacity: 0.85"></a-video>
       </a-entity>
       <!-----------------------------------ТРЕТЬЯ СУЩНОСТЬ--------------------------------------------------->
-      <a-entity mindar-image-target="targetIndex: 2" videohandler>
+      <a-entity mindar-image-target="targetIndex: 2" videohandler="videoId: #video3; audioId: #audio3">
         <a-plane src="#image3" 
                  position="0 0 0" 
                  height="0.66" 
@@ -157,7 +166,7 @@
                  material="opacity: 0.85"></a-video>
       </a-entity>
       <!-----------------------------------ЧЕТВЕРТАЯ СУЩНОСТЬ--------------------------------------------------->
-      <a-entity mindar-image-target="targetIndex: 3" videohandler>
+      <a-entity mindar-image-target="targetIndex: 3" videohandler="videoId: #video4; audioId: #audio4">
         <a-plane src="#image4" 
                  position="0 0 0" 
                  height="0.66" 
