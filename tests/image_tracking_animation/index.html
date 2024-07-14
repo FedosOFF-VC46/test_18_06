@@ -21,5 +21,39 @@
         <a-gltf-model rotation="0 0 0 " position="0 -0.25 0" scale="0.05 0.05 0.05" src="#bearModel" animation-mixer>
       </a-entity>
     </a-scene>
+
+    <script>
+      // Добавление отладочных сообщений
+      AFRAME.registerComponent('log', {
+        init: function () {
+          console.log('Component attached to', this.el);
+        }
+      });
+
+      // Применение компонента log ко всем моделям для отладки
+      document.querySelectorAll('a-gltf-model').forEach(model => {
+        model.setAttribute('log', '');
+      });
+
+      // Проверка загрузки анимаций
+      AFRAME.registerComponent('check-animations', {
+        init: function () {
+          this.el.addEventListener('model-loaded', () => {
+            const model = this.el.getObject3D('mesh');
+            if (model) {
+              const animations = model.animations;
+              console.log('Animations:', animations);
+            } else {
+              console.error('Model mesh not found.');
+            }
+          });
+        }
+      });
+
+      // Применение компонента check-animations ко всем моделям для отладки
+      document.querySelectorAll('a-gltf-model').forEach(model => {
+        model.setAttribute('check-animations', '');
+      });
+    </script>
   </body>
 </html>
