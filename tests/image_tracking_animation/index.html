@@ -13,70 +13,36 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0" smooth-comp="enabled: true" smooth-comp-damping="0.8">
-        <a-gltf-model rotation="90 0 0" position="0 -0.25 0" scale="0.05 0.05 0.05" src="#houseModel" animation-mixer></a-gltf-model>
+      <a-entity id="marker" mindar-image-target="targetIndex: 0">
+        <a-gltf-model id="house" rotation="90 0 0" position="0 -0.25 0" scale="0.05 0.05 0.05" src="#houseModel" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
-      // Добавление сглаживания
-      AFRAME.registerComponent('smooth-comp', {
-        schema: {
-          enabled: {type: 'boolean', default: true},
-          damping: {type: 'number', default: 0.8}
-        },
-        init: function() {
-          this.previousPosition = new THREE.Vector3();
-          this.previousQuaternion = new THREE.Quaternion();
-        },
-        tick: function() {
-          if (!this.data.enabled) return;
-          
-          let el = this.el;
-          let currentPosition = el.object3D.position;
-          let currentQuaternion = el.object3D.quaternion;
-          
-          // Комплементарный фильтр для сглаживания движения
-          let alpha = this.data.damping;
-          this.previousPosition.lerp(currentPosition, alpha);
-          this.previousQuaternion.slerp(currentQuaternion, alpha);
-          
-          el.object3D.position.copy(this.previousPosition);
-          el.object3D.quaternion.copy(this.previousQuaternion);
-        }
-      });
-
-      // Добавление отладочных сообщений
-      AFRAME.registerComponent('log', {
+      AFRAME.registerComponent('freeze-once-visible', {
         init: function () {
-          console.log('Component attached to', this.el);
-        }
-      });
+          this.el.addEventListener('targetFound', () => {
+            const marker = this.el;
+            const houseModel = document.querySelector('#house');
+            
+            // Wait a moment before freezing to ensure model is displayed correctly
+            setTimeout(() => {
+              const position = houseModel.object3D.position.clone();
+              const rotation = houseModel.object3D.rotation.clone();
+              const scale = houseModel.object3D.scale.clone();
 
-      // Применение компонента log ко всем моделям для отладки
-      document.querySelectorAll('a-gltf-model').forEach(model => {
-        model.setAttribute('log', '');
-      });
-
-      // Проверка загрузки анимаций
-      AFRAME.registerComponent('check-animations', {
-        init: function () {
-          this.el.addEventListener('model-loaded', () => {
-            const model = this.el.getObject3D('mesh');
-            if (model) {
-              const animations = model.animations;
-              console.log('Animations:', animations);
-            } else {
-              console.error('Model mesh not found.');
-            }
+              // Detach the model from the marker
+              marker.removeAttribute('mindar-image-target');
+              houseModel.object3D.position.copy(position);
+              houseModel.object3D.rotation.copy(rotation);
+              houseModel.object3D.scale.copy(scale);
+            }, 1000); // Adjust the delay as needed
           });
         }
       });
 
-      // Применение компонента check-animations ко всем моделям для отладки
-      document.querySelectorAll('a-gltf-model').forEach(model => {
-        model.setAttribute('check-animations', '');
-      });
+      // Apply the component to the marker entity
+      document.querySelector('#marker').setAttribute('freeze-once-visible', '');
     </script>
   </body>
 </html>
