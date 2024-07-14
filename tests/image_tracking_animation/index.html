@@ -13,17 +13,17 @@
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0" smooth="enabled: true" smooth-damping="0.1">
+      <a-entity mindar-image-target="targetIndex: 0" smooth-comp="enabled: true" smooth-comp-damping="0.8">
         <a-gltf-model rotation="90 0 0" position="0 -0.25 0" scale="0.05 0.05 0.05" src="#houseModel" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
       // Добавление сглаживания
-      AFRAME.registerComponent('smooth', {
+      AFRAME.registerComponent('smooth-comp', {
         schema: {
           enabled: {type: 'boolean', default: true},
-          damping: {type: 'number', default: 0.1}
+          damping: {type: 'number', default: 0.8}
         },
         init: function() {
           this.previousPosition = new THREE.Vector3();
@@ -36,11 +36,13 @@
           let currentPosition = el.object3D.position;
           let currentQuaternion = el.object3D.quaternion;
           
-          currentPosition.lerp(this.previousPosition, this.data.damping);
-          currentQuaternion.slerp(this.previousQuaternion, this.data.damping);
+          // Комплементарный фильтр для сглаживания движения
+          let alpha = this.data.damping;
+          this.previousPosition.lerp(currentPosition, alpha);
+          this.previousQuaternion.slerp(currentQuaternion, alpha);
           
-          this.previousPosition.copy(currentPosition);
-          this.previousQuaternion.copy(currentQuaternion);
+          el.object3D.position.copy(this.previousPosition);
+          el.object3D.quaternion.copy(this.previousQuaternion);
         }
       });
 
