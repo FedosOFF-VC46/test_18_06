@@ -38134,7 +38134,7 @@
   "buffers": [
     {
       "byteLength": 55152236,
-      "uri": "scene.bin"
+      "uri": "https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.bin"
     }
   ],
   "extensionsUsed": [
@@ -38143,10 +38143,10 @@
   ],
   "images": [
     {
-      "uri": "textures/Material.001_baseColor.png"
+      "uri": "https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/textures/Material.001_baseColor.png"
     },
     {
-      "uri": "textures/aiStandardSurface1_baseColor.png"
+      "uri": "https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/textures/aiStandardSurface1_baseColor.png"
     }
   ],
   "materials": [
