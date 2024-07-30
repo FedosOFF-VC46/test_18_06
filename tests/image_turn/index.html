@@ -14,13 +14,7 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity id="marker" mindar-image-target="targetIndex: 0" freeze-once-visible>
-        <a-gltf-model id="house" rotation="0 0 0" position="0 0 -0.5" scale="0.007 0.007 0.007" src="#houseModel" animation-mixer></a-gltf-model>
-      </a-entity>
-
-      <a-entity id="controls" visible="false">
-        <a-entity id="rotationControl" rotation="0 0 0" position="0 0 -0.5">
-          <a-ring radius-inner="0.7" radius-outer="0.75" position="0 0 0.02" color="#EFEFEF" rotation="90 0 0"></a-ring>
-        </a-entity>
+        <a-gltf-model id="house" rotation="0 0 0" position="0 0 -1" scale="0.007 0.007 0.007" src="#houseModel" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
 
@@ -30,52 +24,22 @@
           this.el.addEventListener('targetFound', () => {
             const marker = this.el;
             const houseModel = document.querySelector('#house');
-            const controls = document.querySelector('#controls');
             
             // Подождать немного перед "замораживанием", чтобы модель отображалась правильно
             setTimeout(() => {
-              const position = houseModel.object3D.position.clone();
-              const rotation = houseModel.object3D.rotation.clone();
-              const scale = houseModel.object3D.scale.clone();
-
               // Переместить модель в центр экрана
               houseModel.object3D.parent = marker.sceneEl.object3D; // Переместить в сцену
               houseModel.object3D.position.set(0, 0, -1); // Центр экрана
-              houseModel.object3D.rotation.copy(rotation);
-              houseModel.object3D.scale.copy(scale);
-
-              // Показать элементы управления
-              controls.setAttribute('visible', 'true');
-
+              
+              // Удалить атрибут mindar-image-target
               marker.removeAttribute('mindar-image-target');
-            }, 1000); // Настройте задержку по мере необходимости
+            }, 10000); // Настройте задержку по мере необходимости
           });
         }
       });
 
-      // Зарегистрировать компонент управления вращением
-      AFRAME.registerComponent('rotation-control', {
-        schema: {
-          speed: { type: 'number', default: 0.01 }
-        },
-        init: function () {
-          this.el.addEventListener('mousedown', () => {
-            this.isDragging = true;
-          });
-          this.el.addEventListener('mouseup', () => {
-            this.isDragging = false;
-          });
-        },
-        tick: function (time, timeDelta) {
-          if (this.isDragging) {
-            const house = document.querySelector('#house');
-            house.object3D.rotation.y += this.data.speed * timeDelta;
-          }
-        }
-      });
-
-      // Применить компонент к элементу управления
-      document.querySelector('#rotationControl').setAttribute('rotation-control', '');
+      // Применить компонент freeze-once-visible к маркеру
+      document.querySelector('#marker').setAttribute('freeze-once-visible', '');
     </script>
   </body>
 </html>
