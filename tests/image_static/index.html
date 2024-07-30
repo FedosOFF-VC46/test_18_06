@@ -12,26 +12,34 @@
 
       <a-camera position="0 1.6 0"></a-camera>
 
-      <a-gltf-model id="house" src="#houseModel" position="0 0 -3" rotation="0 0 0" scale="0.007 0.007 0.007" 
-                    rotation-listener
-                    gesture-detector
-                    pinch-scale>
-      </a-gltf-model>
+      <a-entity id="house-container" position="0 1.6 -3" rotation="0 0 0" scale="0.007 0.007 0.007"
+                gesture-detector>
+        <a-gltf-model id="house" src="#houseModel"></a-gltf-model>
+      </a-entity>
     </a-scene>
 
     <script>
-      AFRAME.registerComponent('rotation-listener', {
+      AFRAME.registerComponent('gesture-handler', {
         init: function () {
-          this.el.addEventListener('rotationChanged', (evt) => {
-            const rotation = evt.detail.rotation;
-            this.el.setAttribute('rotation', {
-              x: rotation.x,
-              y: rotation.y,
-              z: rotation.z
-            });
-          });
+          this.initialScale = this.el.object3D.scale.clone();
+          this.el.addEventListener('onefingermove', this.handleRotation.bind(this));
+          this.el.addEventListener('twofingermove', this.handleScale.bind(this));
+        },
+        handleRotation: function (event) {
+          const rotation = this.el.getAttribute('rotation');
+          rotation.y += event.detail.positionChange.x;
+          rotation.x += event.detail.positionChange.y;
+          this.el.setAttribute('rotation', rotation);
+        },
+        handleScale: function (event) {
+          const scaleFactor = event.detail.spreadChange / 200; // Adjust sensitivity as needed
+          const newScale = this.initialScale.clone();
+          newScale.multiplyScalar(1 + scaleFactor);
+          this.el.object3D.scale.copy(newScale);
         }
       });
+
+      document.querySelector('#house-container').setAttribute('gesture-handler', '');
     </script>
   </body>
 </html>
