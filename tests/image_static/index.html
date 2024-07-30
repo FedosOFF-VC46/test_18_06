@@ -20,22 +20,30 @@
 
     <script>
       AFRAME.registerComponent('gesture-handler', {
+        schema: {
+          enabled: { default: true }
+        },
         init: function () {
           this.initialScale = this.el.object3D.scale.clone();
+          this.initialRotation = this.el.object3D.rotation.clone();
           this.el.addEventListener('onefingermove', this.handleRotation.bind(this));
           this.el.addEventListener('twofingermove', this.handleScale.bind(this));
         },
         handleRotation: function (event) {
-          const rotation = this.el.getAttribute('rotation');
-          rotation.y += event.detail.positionChange.x;
-          rotation.x += event.detail.positionChange.y;
-          this.el.setAttribute('rotation', rotation);
+          if (this.data.enabled) {
+            const rotation = this.el.getAttribute('rotation');
+            rotation.y += event.detail.positionChange.x;
+            rotation.x += event.detail.positionChange.y;
+            this.el.setAttribute('rotation', rotation);
+          }
         },
         handleScale: function (event) {
-          const scaleFactor = event.detail.spreadChange / 200; // Adjust sensitivity as needed
-          const newScale = this.initialScale.clone();
-          newScale.multiplyScalar(1 + scaleFactor);
-          this.el.object3D.scale.copy(newScale);
+          if (this.data.enabled) {
+            const scaleFactor = event.detail.spreadChange / 200; // Adjust sensitivity as needed
+            const newScale = this.initialScale.clone();
+            newScale.multiplyScalar(1 + scaleFactor);
+            this.el.object3D.scale.copy(newScale);
+          }
         }
       });
 
