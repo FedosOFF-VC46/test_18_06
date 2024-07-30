@@ -2,6 +2,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@7.0.0/dist/aframe-extras.min.js"></script>
   </head>
   <body>
     <a-scene color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -11,7 +12,26 @@
 
       <a-camera position="0 1.6 0"></a-camera>
 
-      <a-gltf-model id="house" src="#houseModel" position="0 0 -3" rotation="0 0 0" scale="0.007 0.007 0.007"></a-gltf-model>
+      <a-gltf-model id="house" src="#houseModel" position="0 0 -3" rotation="0 0 0" scale="0.007 0.007 0.007" 
+                    rotation-listener
+                    gesture-detector
+                    pinch-scale>
+      </a-gltf-model>
     </a-scene>
+
+    <script>
+      AFRAME.registerComponent('rotation-listener', {
+        init: function () {
+          this.el.addEventListener('rotationChanged', (evt) => {
+            const rotation = evt.detail.rotation;
+            this.el.setAttribute('rotation', {
+              x: rotation.x,
+              y: rotation.y,
+              z: rotation.z
+            });
+          });
+        }
+      });
+    </script>
   </body>
 </html>
