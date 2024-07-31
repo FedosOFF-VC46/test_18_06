@@ -73,7 +73,7 @@
 
         <a-camera position="0 1.6 3" look-controls="enabled: true"></a-camera>
 
-        <a-gltf-model src="#modalHouseModel" scale="0.5 0.5 0.5" position="0 0 0" rotation="0 0 0"></a-gltf-model>
+        <a-gltf-model src="#modalHouseModel" scale="0.3 0.3 0.3" position="0 0 0" rotation="0 0 0"></a-gltf-model>
       </a-scene>
     </div>
   </div>
@@ -105,21 +105,22 @@
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModal");
     var span = document.getElementsByClassName("close")[0];
+    var mainScene = document.getElementById("mainScene");
 
     btn.onclick = function() {
       modal.style.display = "block";
-      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'false'); // Disable image tracking
+      mainScene.removeAttribute('mindar-image'); // Disable image tracking
     }
 
     span.onclick = function() {
       modal.style.display = "none";
-      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking
+      mainScene.setAttribute('mindar-image', 'imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;'); // Enable image tracking
     }
 
     window.onclick = function(event) {
       if (event.target == modal) {
         modal.style.display = "none";
-        document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking
+        mainScene.setAttribute('mindar-image', 'imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;'); // Enable image tracking
       }
     }
   </script>
