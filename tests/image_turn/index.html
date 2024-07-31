@@ -1,45 +1,42 @@
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  </head>
-  <body>
-    <a-scene mindar-image="imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-      <a-assets>
-        <a-asset-item id="houseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_turn/asset.glb"></a-asset-item>
-      </a-assets>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image tracking with MindAR</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.1/dist/aframe/mindar.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene
+        mindar="imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;"
+        vr-mode-ui="enabled: false;"
+        loading-screen="enabled: false;"
+        gesture-detector
+        embedded
+    >
+        <a-assets>
+            <a-asset-item
+                id="animated-asset"
+                src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"
+            ></a-asset-item>
+        </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-entity
+                id="bowser-model"
+                scale="0.05 0.05 0.05"
+                animation-mixer="loop: repeat"
+                gltf-model="#animated-asset"
+                class="clickable"
+                gesture-handler
+            ></a-entity>
+        </a-entity>
 
-      <a-entity id="marker" mindar-image-target="targetIndex: 0" freeze-once-visible>
-        <a-gltf-model id="house" rotation="0 0 0" position="0 0 -1" scale="0.007 0.007 0.007" src="#houseModel" animation-mixer></a-gltf-model>
-      </a-entity>
+        <a-camera></a-camera>
     </a-scene>
-
-    <script>
-      AFRAME.registerComponent('freeze-once-visible', {
-        init: function () {
-          this.el.addEventListener('targetFound', () => {
-            const marker = this.el;
-            const houseModel = document.querySelector('#house');
-            
-            // Подождать немного перед "замораживанием", чтобы модель отображалась правильно
-            setTimeout(() => {
-              // Переместить модель в центр экрана
-              houseModel.object3D.parent = marker.sceneEl.object3D; // Переместить в сцену
-              houseModel.object3D.position.set(0, 0, -1); // Центр экрана
-              
-              // Удалить атрибут mindar-image-target
-              marker.removeAttribute('mindar-image-target');
-            }, 10000); // Настройте задержку по мере необходимости
-          });
-        }
-      });
-
-      // Применить компонент freeze-once-visible к маркеру
-      document.querySelector('#marker').setAttribute('freeze-once-visible', '');
-    </script>
-  </body>
+</body>
 </html>
