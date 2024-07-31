@@ -20,7 +20,7 @@
       background-color: rgba(0,0,0,0.4); 
     }
     .modal-content {
-      background-color: rgba(0,0,0,0.2);
+      background-color: #fefefe;
       margin: 5% auto; 
       padding: 20px;
       border: 1px solid #888;
@@ -28,19 +28,19 @@
       height: 90%; 
       position: relative;
     }
-    .close {
-      color: #aaa;
-      position: absolute;
-      top: 10px;
-      right: 25px;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
+    .close-button {
+      background-color: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border: none;
       cursor: pointer;
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      font-size: 16px;
+    }
+    .close-button:hover {
+      background-color: #d32f2f;
     }
     .modal a-scene {
       height: 100%;
@@ -65,7 +65,7 @@
 
   <div id="myModal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
+      <button class="close-button" id="closeModal">Закрыть</button>
       <a-scene>
         <a-assets>
           <a-asset-item id="modalHouseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"></a-asset-item>
@@ -73,7 +73,7 @@
 
         <a-camera position="0 1.6 3" look-controls="enabled: true"></a-camera>
 
-        <a-gltf-model src="#modalHouseModel" scale="0.3 0.3 0.3" position="0 0 0" rotation="0 0 0"></a-gltf-model>
+        <a-gltf-model src="#modalHouseModel" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-gltf-model>
       </a-scene>
     </div>
   </div>
@@ -104,7 +104,7 @@
     // Modal logic
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModal");
-    var span = document.getElementsByClassName("close")[0];
+    var closeButton = document.getElementById("closeModal");
     var mainScene = document.getElementById("mainScene");
 
     btn.onclick = function() {
@@ -112,7 +112,7 @@
       mainScene.removeAttribute('mindar-image'); // Disable image tracking
     }
 
-    span.onclick = function() {
+    closeButton.onclick = function() {
       modal.style.display = "none";
       mainScene.setAttribute('mindar-image', 'imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;'); // Enable image tracking
     }
