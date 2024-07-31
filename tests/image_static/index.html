@@ -1,127 +1,129 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/aframe-gesture@latest/dist/aframe-gesture.min.js"></script>
-  <style>
-    /* Modal Styles */
-    .modal {
-      display: none; 
-      position: fixed; 
-      z-index: 1; 
-      left: 0; 
-      top: 0; 
-      width: 100%; 
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/aframe-gesture@latest/dist/aframe-gesture.min.js"></script> 
+  <style> 
+    /* Modal Styles */ 
+    .modal { 
+      display: none;  
+      position: fixed;  
+      z-index: 1;  
+      left: 0;  
+      top: 0;  
+      width: 100%;  
+      height: 100%;  
+      overflow: auto;  
+      background-color: rgba(0,0,0,0.4);  
+    } 
+    .modal-content { 
+      background-color: rgba(0,0,0,0.2); 
+      margin: 5% auto;  
+      padding: 20px; 
+      border: 1px solid #888; 
+      width: 90%;  
+      height: 90%;  
+      position: relative; 
+    } 
+    .close { 
+      color: #aaa; 
+      position: absolute; 
+      top: 10px; 
+      right: 25px; 
+      font-size: 28px; 
+      font-weight: bold; 
+    } 
+    .close:hover, 
+    .close:focus { 
+      color: black; 
+      text-decoration: none; 
+      cursor: pointer; 
+    } 
+    .modal a-scene { 
       height: 100%; 
-      overflow: auto; 
-      background-color: rgba(0,0,0,0.4); 
-    }
-    .modal-content {
-      background-color: rgba(0,0,0,0.2);
-      margin: 5% auto; 
-      padding: 20px;
-      border: 1px solid #888;
-      width: 90%; 
-      height: 90%; 
-      position: relative;
-    }
-    .close {
-      color: #aaa;
-      position: absolute;
-      top: 10px;
-      right: 25px;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .modal a-scene {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <a-scene id="mainScene" mindar-image="imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-    <a-assets>
-      <a-asset-item id="houseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"></a-asset-item>
-    </a-assets>
-
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-    <a-entity id="marker" mindar-image-target="targetIndex: 0">
-      <a-gltf-model id="house" rotation="90 0 0" position="0 0.1 -0.25" scale="0.05 0.05 0.05" src="#houseModel" animation-mixer gesture-handler></a-gltf-model>
-    </a-entity>
-  </a-scene>
-
-  <button id="openModal" style="position: absolute; top: 20px; left: 20px; padding: 10px 20px;">Open 3D Model</button>
-
-  <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <a-scene>
-        <a-assets>
-          <a-asset-item id="modalHouseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"></a-asset-item>
-        </a-assets>
-
-        <a-camera position="0 1.6 3" look-controls="enabled: true" touch-controls="enabled: true"></a-camera>
-
-        <a-gltf-model src="#modalHouseModel" scale="0.1 0.1 0.1" position="0 0 0" rotation="0 0 0" gesture-handler></a-gltf-model>
-      </a-scene>
-    </div>
-  </div>
-
-  <script>
-    AFRAME.registerComponent('gesture-handler', {
-      schema: {
-        type: 'selector'
-      },
-
-      init: function () {
-        this.el.addEventListener('gesture-rotate', (event) => {
-          let rotation = this.el.getAttribute('rotation');
-          rotation.y += event.detail.rotation.y;
-          this.el.setAttribute('rotation', rotation);
-        });
-
-        this.el.addEventListener('gesture-pinch', (event) => {
-          let scale = this.el.getAttribute('scale');
-          scale.x *= event.detail.scale;
-          scale.y *= event.detail.scale;
-          scale.z *= event.detail.scale;
-          this.el.setAttribute('scale', scale);
-        });
-      }
-    });
-
-    // Modal logic
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("openModal");
-    var span = document.getElementsByClassName("close")[0];
-
-    btn.onclick = function() {
-      modal.style.display = "block";
-      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'false'); // Disable image tracking
-    }
-
-    span.onclick = function() {
-      modal.style.display = "none";
-      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking
-    }
-
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-        document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking
-      }
-    }
-  </script>
-</body>
+      width: 100%; 
+    } 
+  </style> 
+</head> 
+<body> 
+  <a-scene id="mainScene" mindar-image="imageTargetSrc: https://fedosoff-vc46.github.io/test_18_06/tests/image_tracking/image1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"> 
+    <a-assets> 
+      <a-asset-item id="houseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"></a-asset-item> 
+    </a-assets> 
+ 
+    <a-camera position="0 1.6 3" look-controls="enabled: true" touch-controls="enabled: true"></a-camera> 
+ 
+    <a-entity id="marker" mindar-image-target="targetIndex: 0"> 
+      <a-gltf-model id="house" rotation="0 0 0" position="0 0 0" scale="0.05 0.05 0.05" src="#houseModel" animation-mixer gesture-handler></a-gltf-model> 
+    </a-entity> 
+  </a-scene> 
+ 
+  <button id="openModal" style="position: absolute; top: 20px; left: 20px; padding: 10px 20px;">Open 3D Model</button> 
+ 
+  <div id="myModal" class="modal"> 
+    <div class="modal-content"> 
+      <span class="close">&times;</span> 
+      <a-scene> 
+        <a-assets> 
+          <a-asset-item id="modalHouseModel" src="https://raw.githubusercontent.com/FedosOFF-VC46/test_18_06/main/tests/image_tracking_animation/models/scene.gltf"></a-asset-item> 
+        </a-assets> 
+ 
+        <!-- Set camera at a fixed position with look-controls and touch-controls --> 
+        <a-camera position="0 1.6 3" look-controls="enabled: true" touch-controls="enabled: true"></a-camera> 
+ 
+        <!-- Center the model and allow interaction --> 
+        <a-gltf-model src="#modalHouseModel" scale="0.1 0.1 0.1" position="0 0 0" rotation="0 0 0" pinch-controls></a-gltf-model> 
+      </a-scene> 
+    </div> 
+  </div> 
+ 
+  <script> 
+    AFRAME.registerComponent('gesture-handler', { 
+      schema: { 
+        type: 'selector' 
+      }, 
+ 
+      init: function () { 
+        this.el.addEventListener('gesture-rotate', (event) => { 
+          let rotation = this.el.getAttribute('rotation'); 
+          rotation.y += event.detail.rotation.y; 
+          this.el.setAttribute('rotation', rotation); 
+        }); 
+ 
+        this.el.addEventListener('gesture-pinch', (event) => { 
+          let scale = this.el.getAttribute('scale'); 
+          scale.x *= event.detail.scale; 
+          scale.y *= event.detail.scale; 
+          scale.z *= event.detail.scale; 
+          this.el.setAttribute('scale', scale); 
+        }); 
+      } 
+    }); 
+ 
+    // Modal logic 
+    var modal = document.getElementById("myModal"); 
+    var btn = document.getElementById("openModal"); 
+    var span = document.getElementsByClassName("close")[0]; 
+ 
+    btn.onclick = function() { 
+      modal.style.display ="block"; 
+      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'false'); // Disable image tracking 
+    } 
+ 
+    span.onclick = function() { 
+      modal.style.display = "none"; 
+      document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking 
+    } 
+ 
+    window.onclick = function(event) { 
+      if (event.target == modal) { 
+        modal.style.display = "none"; 
+        document.getElementById('mainScene').setAttribute('mindar-image', 'enabled', 'true'); // Enable image tracking 
+      } 
+    } 
+  </script> 
+</body> 
 </html>
