@@ -36,6 +36,10 @@
               houseModel.object3D.position.copy(position);
               houseModel.object3D.rotation.copy(rotation);
               houseModel.object3D.scale.copy(scale);
+
+              // Add orbit controls to the model
+              houseModel.setAttribute('orbit-controls', 'target: #house; autoRotate: false');
+              houseModel.setAttribute('touch-controls', '');
             }, 1000); // Adjust the delay as needed
           });
         }
